@@ -73,8 +73,8 @@ def compile_unet(
     pt_mod = pt_mod.eval()
     params_ait = map_unet_params(pt_mod, dim)
     # batch_size = IntVar(values=[1, 8], name="batch_size")
-    height_d = IntVar(values=[32, 64], name="height")
-    width_d = IntVar(values=[32, 64], name="width")
+    height_d = 64 #IntVar(values=[32, 64], name="height")
+    width_d = 64 #IntVar(values=[32, 64], name="width")
 
     latent_model_input_ait = Tensor(
         [batch_size, height_d, width_d, 4], name="input0", is_input=True
@@ -83,6 +83,9 @@ def compile_unet(
     text_embeddings_pt_ait = Tensor(
         [batch_size, 77, hidden_dim], name="input2", is_input=True
     )
+    t5_embeddings_pt_ait = Tensor(
+        [batch_size, 77, 2048], name="input3", is_input=True
+    )
 
     mid_block_additional_residual = None
     down_block_additional_residuals = None
@@ -90,7 +93,7 @@ def compile_unet(
     Y = ait_mod(
         latent_model_input_ait,
         timesteps_ait,
-        text_embeddings_pt_ait,
+        [text_embeddings_pt_ait, t5_embeddings_pt_ait],
         down_block_additional_residuals,
         mid_block_additional_residual,
     )
@@ -99,4 +102,4 @@ def compile_unet(
     target = detect_target(
         use_fp16_acc=use_fp16_acc, convert_conv_to_gemm=convert_conv_to_gemm
     )
-    compile_model(Y, target, "./tmp", model_name, constants=params_ait)
+    compile_model(Y, target, "./tmp", model_name) #, constants=params_ait)

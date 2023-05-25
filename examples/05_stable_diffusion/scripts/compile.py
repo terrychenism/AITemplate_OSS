@@ -13,12 +13,15 @@
 #  limitations under the License.
 #
 import logging
-
+import sys
 import click
 import torch
 from aitemplate.testing import detect_target
 from aitemplate.utils.import_path import import_parent
 from diffusers import StableDiffusionPipeline
+
+
+sys.setrecursionlimit(1200)
 
 if __name__ == "__main__":
     import_parent(filepath=__file__, level=1)
@@ -62,17 +65,17 @@ def compile_diffusers(
     hh = height // 8
 
     # CLIP
-    compile_clip(
-        pipe.text_encoder,
-        batch_size=batch_size,
-        seqlen=77,
-        use_fp16_acc=use_fp16_acc,
-        convert_conv_to_gemm=convert_conv_to_gemm,
-        depth=pipe.text_encoder.config.num_hidden_layers,
-        num_heads=pipe.text_encoder.config.num_attention_heads,
-        dim=pipe.text_encoder.config.hidden_size,
-        act_layer=pipe.text_encoder.config.hidden_act,
-    )
+    # compile_clip(
+    #     pipe.text_encoder,
+    #     batch_size=batch_size,
+    #     seqlen=77,
+    #     use_fp16_acc=use_fp16_acc,
+    #     convert_conv_to_gemm=convert_conv_to_gemm,
+    #     depth=pipe.text_encoder.config.num_hidden_layers,
+    #     num_heads=pipe.text_encoder.config.num_attention_heads,
+    #     dim=pipe.text_encoder.config.hidden_size,
+    #     act_layer=pipe.text_encoder.config.hidden_act,
+    # )
     # UNet
     compile_unet(
         pipe.unet,
@@ -85,6 +88,7 @@ def compile_diffusers(
         attention_head_dim=pipe.unet.config.attention_head_dim,
         use_linear_projection=pipe.unet.config.get("use_linear_projection", False),
     )
+    return
     # VAE
     compile_vae(
         pipe.vae,

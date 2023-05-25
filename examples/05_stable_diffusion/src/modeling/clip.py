@@ -207,10 +207,11 @@ class SpatialTransformer(nn.Module):
                 in_channels, inner_dim, kernel_size=1, stride=1, padding=0
             )
 
+        context_dims = [768, 2048]
         self.transformer_blocks = nn.ModuleList(
             [
                 BasicTransformerBlock(
-                    inner_dim, n_heads, d_head, dropout=dropout, context_dim=context_dim
+                    inner_dim, n_heads, d_head, dropout=dropout, context_dim=context_dims[d]
                 )
                 for d in range(depth)
             ]
@@ -223,7 +224,7 @@ class SpatialTransformer(nn.Module):
                 inner_dim, in_channels, kernel_size=1, stride=1, padding=0
             )
 
-    def forward(self, x, context=None):
+    def forward(self, x, context):
         # note: if no context is given, cross-attention defaults to self-attention
         b, h, w, c = x.shape()
         x_in = x
@@ -235,8 +236,9 @@ class SpatialTransformer(nn.Module):
             x = self.proj_in(x)
             x = ops.reshape()(x, [b, -1, c])
 
-        for block in self.transformer_blocks:
-            x = block(x, context=context)
+
+        for i, block in enumerate(self.transformer_blocks):
+            x = block(x, context=context[i])
 
         if self.use_linear_projection:
             x = self.proj_out(x)

@@ -277,7 +277,7 @@ class UNetMidBlock2DCrossAttn(nn.Module):
                     in_channels,
                     attn_num_head_channels,
                     in_channels // attn_num_head_channels,
-                    depth=1,
+                    depth=2,
                     context_dim=cross_attention_dim,
                     use_linear_projection=use_linear_projection,
                 )
@@ -359,7 +359,7 @@ class CrossAttnDownBlock2D(nn.Module):
                     out_channels,
                     attn_num_head_channels,
                     out_channels // attn_num_head_channels,
-                    depth=1,
+                    depth=2,
                     context_dim=cross_attention_dim,
                     use_linear_projection=use_linear_projection,
                 )
@@ -522,7 +522,7 @@ class CrossAttnUpBlock2D(nn.Module):
                     out_channels,
                     attn_num_head_channels,
                     out_channels // attn_num_head_channels,
-                    depth=1,
+                    depth=2,
                     context_dim=cross_attention_dim,
                     use_linear_projection=use_linear_projection,
                 )
