@@ -21,7 +21,7 @@ from aitemplate.utils.import_path import import_parent
 from diffusers import StableDiffusionPipeline
 
 
-sys.setrecursionlimit(1200)
+sys.setrecursionlimit(1500)
 
 if __name__ == "__main__":
     import_parent(filepath=__file__, level=1)

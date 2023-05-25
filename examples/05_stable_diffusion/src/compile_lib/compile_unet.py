@@ -66,6 +66,8 @@ def compile_unet(
         cross_attention_dim=hidden_dim,
         attention_head_dim=attention_head_dim,
         use_linear_projection=use_linear_projection,
+        block_out_channels=[384, 768, 1536, 1536],
+        layers_per_block=3,
     )
     ait_mod.name_parameter_tensor()
 
