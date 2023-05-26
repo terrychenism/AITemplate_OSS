@@ -496,12 +496,14 @@ def convert_ldm_unet_checkpoint(unet_state_dict, layers_per_block=2):
                 index = list(output_block_list.values()).index(
                     ["conv.bias", "conv.weight"]
                 )
-                new_checkpoint[
-                    f"up_blocks.{block_id}.upsamplers.0.conv.weight"
-                ] = unet_state_dict[f"output_blocks.{i}.{index}.conv.weight"]
-                new_checkpoint[
-                    f"up_blocks.{block_id}.upsamplers.0.conv.bias"
-                ] = unet_state_dict[f"output_blocks.{i}.{index}.conv.bias"]
+                key = f"output_blocks.{i}.{index}.conv.weight"
+                if key in unet_state_dict:
+                    new_checkpoint[
+                        f"up_blocks.{block_id}.upsamplers.0.conv.weight"
+                    ] = unet_state_dict[f"output_blocks.{i}.{index}.conv.weight"]
+                    new_checkpoint[
+                        f"up_blocks.{block_id}.upsamplers.0.conv.bias"
+                    ] = unet_state_dict[f"output_blocks.{i}.{index}.conv.bias"]
 
                 # Clear attentions as they have been attributed above.
                 if len(attentions) == 2:

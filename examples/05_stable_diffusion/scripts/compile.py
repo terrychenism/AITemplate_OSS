@@ -55,7 +55,7 @@ def compile_diffusers(
         local_dir,
         revision="fp16",
         torch_dtype=torch.float16,
-    ).to("cuda")
+    ) #.to("cuda")
 
     assert (
         height % 64 == 0 and width % 64 == 0
@@ -78,7 +78,8 @@ def compile_diffusers(
     # )
     # UNet
     compile_unet(
-        pipe.unet,
+        # pipe.unet,
+        None,
         batch_size=batch_size * 2,
         width=ww,
         height=hh,
